@@ -1,0 +1,11 @@
+<div>
+    <x-table 
+        :$headers 
+        :$rows 
+        filter 
+        loading 
+        paginate 
+        :quantity="[5,10,20,50,100]" 
+        link="user/{id}"
+    />
+</div>
