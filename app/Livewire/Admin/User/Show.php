@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\User;
 
+use App\Models\Area;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -13,24 +14,22 @@ class Show extends Component
     use Interactions;
 
     public User $user;
+    public array $user_to_update = [];
     public array $information = [];
-    public array $passwords = [
-        'current' => null,
-        'new' => null,
-        'new_confirmation' => null,
-    ];
 
     public function mount ($id) {
         $this->user = User::with(['sessions','information'])
             ->where('id',$id)
             ->first();
 
+        $this->user_to_update = $this->user->toArray();
         $this->information = $this->user->information->toArray();
     }
 
     public function render() {
         $profiles = Profile::all();
-        return view('livewire.admin.user.show',compact('profiles'));
+        $areas = Area::where('active',1)->get();
+        return view('livewire.admin.user.show',compact('profiles','areas'));
     }
 
     public function updateInformation () {
@@ -59,29 +58,19 @@ class Show extends Component
 
         $this->user->information->save();
 
-        $this->user->profile_id = $this->user->profile_id;
+        $this->user->profile_id = $this->user_to_update['profile_id'];
+        $this->user->area_id = $this->user_to_update['area_id'];
         $this->user->save();
 
         $this->toast()->success('Success','User information updated successfully.')->send();
-        $this->resetData();
     }
 
-    public function updatePassword () {
-        $this->validate([
-            'passwords.current' => 'required|string',
-            'passwords.new' => 'required|string|min:8|confirmed',
-        ]);
+    public function resetPassword () {
 
-        if (Hash::check($this->passwords['current'], $this->user->password)) {
-            $this->toast()->error('Error','The current password is incorrect.')->send();
-            return;
-        }
-
-        $this->user->password = Hash::make($this->passwords['new']);
+        $this->user->password = Hash::make($this->user::DEFAULTPASS);
         $this->user->save();
 
-        $this->toast()->success('Success','Password updated successfully.')->send();
-        $this->resetData();
+        $this->toast()->success('Success','Password restore successfully.')->send();
     }
 
     public function disableUser () {

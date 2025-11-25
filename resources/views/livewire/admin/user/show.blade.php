@@ -48,47 +48,61 @@
             <form wire:submit.prevent="updateInformation">
                 <div class="grid grid-cols-6 gap-4">
                     <div class="col-span-6 sm:col-span-3">
-                        <x-input label="First name" icon="fas.edit" maxlength="60" wire:model="information.first_name" required  :value="old('information.first_name')"/>
+                        <x-input label="First name *" icon="fas.edit" maxlength="60" wire:model="information.first_name" required  :value="old('information.first_name')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-input label="Last name" icon="fas.edit" maxlength="60" wire:model="information.last_name" required  :value="old('information.last_name')"/>
+                        <x-input label="Last name *" icon="fas.edit" maxlength="60" wire:model="information.last_name" required  :value="old('information.last_name')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-input label="Dpi" icon="fas.address-card" maxlength="13" wire:model="information.cui" required  :value="old('information.cui')"/>
+                        <x-input label="Dpi *" icon="fas.address-card" maxlength="13" wire:model="information.cui" required  :value="old('information.cui')"/>
+                    </div>
+                    <div class="flex gap-4 col-span-6 sm:col-span-3">
+                        <x-date label="Birthday *" icon="cake" wire:model="information.birthday" required format="YYYY, MMMM, DD"  :value="old('information.birthday')"/>
+                        <div class="grid justify-items-center">
+                            <label class="font-semibold text-sm text-gray-400"> Gender </label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-1">
+                                    <x-icon name="fas.person" class="size-6 text-blue-500" />
+                                    <x-radio wire:model="information.gender" name="gender" color="blue" value="M" title="MALE" />
+                                </label>
+
+                                <label class="flex items-center gap-1">
+                                    <x-icon name="fas.person-dress" class="size-6 text-fuchsia-500" />
+                                    <x-radio wire:model="information.gender" name="gender" color="fuchsia" value="F" title="FEMALE" />
+                                </label>
+                                
+                            </div>
+                        </div>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-date label="Birthday" icon="cake" wire:model="information.birthday" required format="YYYY, MMMM, DD"  :value="old('information.birthday')"/>
+                        <x-input label="Email *" icon="fas.envelope" wire:model="information.email" type="email" required  :value="old('information.email')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-input label="Email" icon="fas.envelope" wire:model="information.email" type="email" required  :value="old('information.email')"/>
-                    </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <x-input label="Phone" icon="fas.phone" maxlength="8" minlength="8" wire:model="information.phone" type="tel" required  :value="old('information.phone')"/>
+                        <x-input label="Phone *" icon="fas.phone" maxlength="8" minlength="8" wire:model="information.phone" type="tel" required  :value="old('information.phone')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
                         <x-input label="City" icon="fas.city" maxlength="60" wire:model="information.city" :value="old('information.city')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-input label="Address" icon="fas.location-dot" maxlength="255" wire:model="information.address" :value="old('information.address')"/>
+                        <x-input label="Address *" icon="fas.location-dot" maxlength="255" wire:model="information.address" :value="old('information.address')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-select.native wire:model="user.profile_id" 
+                        <x-select.native wire:model="user_to_update.profile_id" 
                             :options="$profiles"
                             select="label:name|value:id"
                             label="Profile" 
                             icon="fas.id-card-clip"
                         />
                     </div>
-                    
-                    <div class="grid justify-items-center">
-                        <label class="font-semibold text-sm text-gray-400"> Gender </label>
-                        <div class="flex gap-4">
-                            <x-icon name="fas.person" class="size-6 text-blue-500" />
-                            <x-toggle wire:model.live="information.gender" color="fuchsia" lg value="F"/>
-                            <x-icon name="fas.person-dress" class="size-6 text-fuchsia-500" />
-                        </div>
+                    <div class="col-span-6 sm:col-span-3">
+                        <x-select.native wire:model="user_to_update.area_id" 
+                            :options="$areas"
+                            select="label:name|value:id"
+                            label="Areas" 
+                            icon="fas.building"
+                        />
                     </div>
-
+                    
                     <div class="col-span-6 sm:col-full">
                         <x-button
                             type="submit" 
@@ -103,29 +117,15 @@
             </form>
         </div>
         <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-            <h3 class="mb-4 text-xl font-semibold ">Password information</h3>
-            <form>
-                <div class="grid grid-cols-6 gap-6">
-                    <div class="col-span-6 sm:col-span-3">
-                        <x-password wire:model="passwords.current" label="Current password" icon="fas.key" type="password" placeholder="*******" required />
-                    </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <x-password wire:model="passwords.new" label="New password" icon="fas.lock" type="password" placeholder="*******" required />
-                    </div>
-                    <div class="col-span-6 sm:col-span-3">
-                        <x-password wire:model="passwords.new_confirmation" label="Confirm password" icon="fas.lock" type="password" placeholder="*******" required />
-                    </div>
-                    <div class="col-span-6 sm:col-full">
-                        <x-button 
-                            type="submit" 
-                            text="Save all" 
-                            icon="fas.save" 
-                            round
-                            color="blue"
-                        />
-                    </div>
-                </div>
-            </form>
+            <h3 class="mb-4 text-xl font-semibold ">Reset Password ?</h3>
+            <x-button
+                wire:click="resetPassword"
+                text="Yes, reset password" 
+                color="red"
+                round 
+                icon="fas.exclamation-triangle"
+                loading="resetPassword"
+            />
         </div>
     </div>
 </div>
