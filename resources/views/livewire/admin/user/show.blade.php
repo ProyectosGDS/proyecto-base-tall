@@ -87,10 +87,10 @@
                         <x-input label="Address *" icon="fas.location-dot" maxlength="255" wire:model="information.address" :value="old('information.address')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-select.native wire:model="user_to_update.profile_id" 
-                            :options="$profiles"
+                        <x-select.native wire:model="user_to_update.role_id" 
+                            :options="$roles"
                             select="label:name|value:id"
-                            label="Profile" 
+                            label="Role" 
                             icon="fas.id-card-clip"
                         />
                     </div>

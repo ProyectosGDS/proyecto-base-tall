@@ -16,6 +16,7 @@ class Page extends Model
         'state',
         'page_id',
         'type',
+        'permission_name'
     ];
 
     protected $appends = ['active'];
@@ -24,12 +25,8 @@ class Page extends Model
         return $this->belongsTo(Page::class,'page_id');
     }
 
-    public function childrens() {
+    public function children() {
         return $this->hasMany(Page::class,'page_id');
-    }
-
-    public function menu() {
-        return $this->belongsToMany(Menu::class,'pages_menu');
     }
 
     public function getActiveAttribute() {

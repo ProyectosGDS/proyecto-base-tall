@@ -2,23 +2,25 @@
 
 namespace App\Livewire;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
-class Settings extends Component
-{   
+class Profile extends Component
+{   public array $user;
     public array $information = [];
     public $passwords;
     public $sessions;
 
     public function mount() {
-        $user = Auth::user();
+        $user = Auth::user()->append('role_name');
+        $this->user = $user->toArray() ?? [];
         $this->information = $user->information?->toArray() ?? [];
         $this->sessions = $user->sessions;
     }
 
     public function render() {
-        return view('livewire.settings');
+        return view('livewire.profile');
     }
 
     // use Interactions;

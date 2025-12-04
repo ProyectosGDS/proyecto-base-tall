@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('order')->nullable();
             $table->boolean('state')->default(1);
             $table->enum('type',['header','parent','page'])->default('page');
+            $table->string('permission_name')->nullable();
             $table->foreignId('page_id')->nullable()->constrained();
         });
     }

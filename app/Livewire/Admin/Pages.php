@@ -43,7 +43,8 @@ class Pages extends Component
             [ 'index' => 'state', 'label' => 'state' ],
             [ 'index' => 'type', 'label' => 'type' ],
             [ 'index' => 'parent.label', 'label' => 'parent' ],
-            [ 'index' => 'action' ],
+            [ 'index' => 'permission_name', 'label' => 'permission' ],
+            [ 'index' => 'action', 'sortable' => false ],
 
         ];
 
@@ -71,7 +72,7 @@ class Pages extends Component
             'page.route' => 'nullable|string|max:255',
             'page.order' => 'nullable|int',
             'page.type' => 'required|string|in:header,parent,page',
-            'page.page_id' => 'required_if:type,page|nullable|int|exits:pages,id',
+            'page.page_id' => 'required_if:type,page|nullable|int|exists:pages,id',
         ]);
 
         Page::create([
@@ -102,17 +103,19 @@ class Pages extends Component
             'page.route' => 'nullable|string|max:255',
             'page.order' => 'nullable|int',
             'page.type' => 'required|string|in:header,parent,page',
-            'page.page_id' => 'required_if:type,page|nullable|int|exits:pages,id',
+            'page.page_id' => 'required_if:type,page|nullable|int|exists:pages,id',
+            'page.permission_name' => 'nullable|string|max:255',
         ]);
 
         $page = Page::find($this->page['id']);
 
         $page->label = $this->page['label'];
-        $page->icon = $this->page['icon'];
-        $page->route = $this->page['route'];
-        $page->order = $this->page['order'];
+        $page->icon = $this->page['icon'] ?? null;
+        $page->route = $this->page['route'] ?? null;
+        $page->order = $this->page['order'] ?? null;
         $page->type = $this->page['type'];
-        $page->page_id = $this->page['page_id'];
+        $page->page_id = $this->page['page_id'] ?? null;
+        $page->permission_name = $this->page['permission_name'] ?? null;
 
         $page->save();
 

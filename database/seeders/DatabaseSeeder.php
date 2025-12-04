@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Area;
-use App\Models\Menu;
 use App\Models\Page;
 use App\Models\Permission;
-use App\Models\Profile;
 use App\Models\User;
 use App\Models\UserInformation;
 use App\Models\UserType;
@@ -59,6 +57,11 @@ class DatabaseSeeder extends Seeder
             'area_id' => 1
         ]);
 
+        Area::create([
+            'name' => 'UNIDAD DE CONVIVENCIA SOCIAL',
+            'area_id' => 1
+        ]);
+
 
         UserType::create([
             'name' => 'INTERNO'
@@ -68,20 +71,23 @@ class DatabaseSeeder extends Seeder
             'name' => 'EXTERNO'
         ]);
 
+
         Page::create([
             'label' => 'Admin',
             'icon' => 'fas.shield',
             'type' => 'parent',
             'order' => 1,
+            'permission_name' => 'page.view.admin'
         ]);
 
         Page::create([
             'label' => 'Users',
-            'route' => 'users',
+            'route' => 'user.index',
             'icon' => 'fas.users',
             'page_id' => 1,
             'type' => 'page',
             'order' => 1,
+            'permission_name' => 'page.view.users'
         ]);
 
         Page::create([
@@ -91,16 +97,9 @@ class DatabaseSeeder extends Seeder
             'page_id' => 1,
             'type' => 'page',
             'order' => 2,
+            'permission_name' => 'page.view.pages'
         ]);
 
-        Page::create([
-            'label' => 'Menus',
-            'route' => 'menus',
-            'icon' => 'fas.layer-group',
-            'page_id' => 1,
-            'type' => 'page',
-            'order' => 3,
-        ]);
 
         Page::create([
             'label' => 'Roles',
@@ -108,7 +107,8 @@ class DatabaseSeeder extends Seeder
             'icon' => 'fas.tag',
             'page_id' => 1,
             'type' => 'page',
-            'order' => 4,
+            'order' => 3,
+            'permission_name' => 'page.view.roles'
         ]);
         
         Page::create([
@@ -117,17 +117,10 @@ class DatabaseSeeder extends Seeder
             'icon' => 'fas.lock',
             'page_id' => 1,
             'type' => 'page',
-            'order' => 5,
+            'order' => 4,
+            'permission_name' => 'page.view.permissions'
         ]);
         
-        Page::create([
-            'label' => 'Profiles',
-            'route' => 'profiles',
-            'icon' => 'fas.user-tag',
-            'page_id' => 1,
-            'type' => 'page',
-            'order' => 6,
-        ]);
 
         Page::create([
             'label' => 'Areas',
@@ -135,144 +128,139 @@ class DatabaseSeeder extends Seeder
             'icon' => 'fas.building',
             'page_id' => 1,
             'type' => 'page',
-            'order' => 7,
+            'order' => 5,
+            'permission_name' => 'page.view.areas'
         ]);
 
         
-        $menu = Menu::create([
-            'name' => 'Sysadmin'
+        Permission::create([
+            'name' => 'users.view',
+            'guard_name' => 'web',
+            'module' => 'users'
         ]);
-
+        Permission::create([
+            'name' => 'users.store',
+            'guard_name' => 'web',
+            'module' => 'users'
+        ]);
+        Permission::create([
+            'name' => 'users.edit',
+            'guard_name' => 'web',
+            'module' => 'users'
+        ]);
         
-        $menu->pages()->sync(Page::all()->pluck('id'));
+        Permission::create([
+            'name' => 'users.disabled',
+            'guard_name' => 'web',
+            'module' => 'users'
+        ]);
 
-        
         Permission::create([
-            'name' => 'view list users',
+            'name' => 'users.reset.password',
             'guard_name' => 'web',
             'module' => 'users'
         ]);
         Permission::create([
-            'name' => 'store user',
-            'guard_name' => 'web',
-            'module' => 'users'
-        ]);
-        Permission::create([
-            'name' => 'edit user',
-            'guard_name' => 'web',
-            'module' => 'users'
-        ]);
-        Permission::create([
-            'name' => 'delete user',
-            'guard_name' => 'web',
-            'module' => 'users'
-        ]);
-        Permission::create([
-            'name' => 'reset password user',
-            'guard_name' => 'web',
-            'module' => 'users'
-        ]);
-        Permission::create([
-            'name' => 'view list pages',
+            'name' => 'pages.view',
             'guard_name' => 'web',
             'module' => 'pages'
         ]);
         Permission::create([
-            'name' => 'store page',
+            'name' => 'pages.store',
             'guard_name' => 'web',
             'module' => 'pages'
         ]);
         Permission::create([
-            'name' => 'edit page',
+            'name' => 'pages.edit',
             'guard_name' => 'web',
             'module' => 'pages'
         ]);
         Permission::create([
-            'name' => 'delete page',
+            'name' => 'pages.disabled',
             'guard_name' => 'web',
             'module' => 'pages'
         ]);
+
         Permission::create([
-            'name' => 'view list menus',
-            'guard_name' => 'web',
-            'module' => 'menus'
-        ]);
-        Permission::create([
-            'name' => 'store menu',
-            'guard_name' => 'web',
-            'module' => 'menus'
-        ]);
-        Permission::create([
-            'name' => 'edit menu',
-            'guard_name' => 'web',
-            'module' => 'menus'
-        ]);
-        Permission::create([
-            'name' => 'delete menu',
-            'guard_name' => 'web',
-            'module' => 'menus'
-        ]);
-        Permission::create([
-            'name' => 'view list roles',
+            'name' => 'roles.view',
             'guard_name' => 'web',
             'module' => 'roles'
         ]);
         Permission::create([
-            'name' => 'store role',
+            'name' => 'roles.store',
             'guard_name' => 'web',
             'module' => 'roles'
         ]);
         Permission::create([
-            'name' => 'edit role',
+            'name' => 'roles.edit',
             'guard_name' => 'web',
             'module' => 'roles'
         ]);
         Permission::create([
-            'name' => 'delete role',
+            'name' => 'roles.delete',
             'guard_name' => 'web',
             'module' => 'roles'
         ]);
         Permission::create([
-            'name' => 'view list permissions',
+            'name' => 'permissions.view',
             'guard_name' => 'web',
             'module' => 'permissions'
         ]);
         Permission::create([
-            'name' => 'store permission',
+            'name' => 'permissions.store',
             'guard_name' => 'web',
             'module' => 'permissions'
         ]);
         Permission::create([
-            'name' => 'edit permission',
-            'guard_name' => 'web',
-            'module' => 'permissions'
-        ]);
-        Permission::create([
-            'name' => 'delete permission',
+            'name' => 'permissions.edit',
             'guard_name' => 'web',
             'module' => 'permissions'
         ]);
 
         Permission::create([
-            'name' => 'view list profiles',
+            'name' => 'permissions.delete',
             'guard_name' => 'web',
-            'module' => 'profiles'
+            'module' => 'permissions'
         ]);
+
+        // PERMISOS PARA VISUALIZAR LAS PAGINAS O HASTA RUTAS
+
         Permission::create([
-            'name' => 'store profile',
+            'name' => 'page.view.admin',
             'guard_name' => 'web',
-            'module' => 'profiles'
+            'module' => 'menu'
         ]);
+
         Permission::create([
-            'name' => 'edit profile',
+            'name' => 'page.view.users',
             'guard_name' => 'web',
-            'module' => 'profiles'
+            'module' => 'menu'
         ]);
+
         Permission::create([
-            'name' => 'delete profile',
+            'name' => 'page.view.pages',
             'guard_name' => 'web',
-            'module' => 'profiles'
+            'module' => 'menu'
         ]);
+
+        Permission::create([
+            'name' => 'page.view.roles',
+            'guard_name' => 'web',
+            'module' => 'menu'
+        ]);
+
+        Permission::create([
+            'name' => 'page.view.permissions',
+            'guard_name' => 'web',
+            'module' => 'menu'
+        ]);
+
+        Permission::create([
+            'name' => 'page.view.areas',
+            'guard_name' => 'web',
+            'module' => 'menu'
+        ]);
+
 
         $role = Role::create([
             'name' => 'Sysadmin'
@@ -280,21 +268,15 @@ class DatabaseSeeder extends Seeder
 
         $role->permissions()->sync(Permission::all()->pluck('id'));
 
-        Profile::create([
-            'name' => 'Sysadmin',
-            'description' => 'lorem ipsmun all for get status for greate',
-            'role_id' => 1,
-            'menu_id' => 1,
-        ]);
 
-        User::create([
+        $user = User::create([
             'cui' => '2733271000101',
             'password' => bcrypt('Cyb3rn3lsk8'),
-            'profile_id' => 1,
             'area_id' => 1,
             'user_type_id' => 1,
         ]);
 
+        $user->assignRole('Sysadmin');
 
         UserInformation::create([
             'first_name' => 'Nelson',

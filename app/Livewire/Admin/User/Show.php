@@ -3,10 +3,10 @@
 namespace App\Livewire\Admin\User;
 
 use App\Models\Area;
-use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
+use Spatie\Permission\Models\Role;
 use TallStackUi\Traits\Interactions;
 
 class Show extends Component
@@ -27,9 +27,9 @@ class Show extends Component
     }
 
     public function render() {
-        $profiles = Profile::all();
+        $roles = Role::all();
         $areas = Area::where('active',1)->get();
-        return view('livewire.admin.user.show',compact('profiles','areas'));
+        return view('livewire.admin.user.show',compact('roles','areas'));
     }
 
     public function updateInformation () {

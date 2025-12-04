@@ -18,21 +18,8 @@
     <x-modal wire="modal.new" title="New page">
         <form wire:submit.prevent="save">
             <div class="grid grid-cols-2 gap-4">
-                <x-input wire:model="page.label" label='Label *' icon="fas.edit" required/>
-                <x-input wire:model="page.icon" label='Icon' icon="fas.edit" />
-                <x-input wire:model="page.route" label='Route' icon="fas.edit" />
-                <x-input wire:model="page.order" label='Order' icon="fas.edit" />
-                <x-select.native wire:model="page.type" 
-                    label="Type *" 
-                    :options="['','header','parent','page']"
-                    required
-                />
-                <x-select.styled wire:model="page.page_id" 
-                    label="Parent"
-                    :options="$parents"
-                    select="label:label|value:id"
-                />
-                <x-input wire:model="page.permission_name" label='Permission' icon="fas.lock" />
+                <x-input wire:model="role.name" label='Name *' icon="fas.edit" required/>
+               
             </div>
             <div class="flex justify-around items-center mt-4">
                 <x-button wire:click="resetData" icon="fas.xmark" text="Cancel" color="blue" round loading="resetData" />
@@ -44,21 +31,7 @@
     <x-modal wire="modal.edit" title="Edit page">
         <form wire:submit.prevent="update">
             <div class="grid grid-cols-2 gap-4">
-                <x-input wire:model="page.label" label='Label *' icon="fas.edit" required/>
-                <x-input wire:model="page.icon" label='Icon' icon="fas.edit" />
-                <x-input wire:model="page.route" label='Route' icon="fas.edit" />
-                <x-input wire:model="page.order" label='Order' icon="fas.edit" />
-                <x-select.native wire:model="page.type" 
-                    label="Type *" 
-                    :options="['','header','parent','page']"
-                    required
-                />
-                <x-select.styled wire:model="page.page_id" 
-                    label="Parent"
-                    :options="$parents"
-                    select="label:label|value:id"
-                />
-                <x-input wire:model="page.permission_name" label='Permission' icon="fas.lock" />
+                <x-input wire:model="role.name" label='Name *' icon="fas.edit" required/>
             </div>
             <div class="flex justify-around items-center mt-4">
                 <x-button wire:click="resetData" icon="fas.xmark" text="Cancel" color="blue" round loading="resetData" />
@@ -82,3 +55,4 @@
         </div>
     </x-modal>
 </div>
+

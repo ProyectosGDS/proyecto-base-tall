@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('cui',13)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->foreignId('profile_id')->nullable()->constrained();
             $table->foreignId('area_id')->nullable()->constrained();
             $table->foreignId('user_type_id')->nullable()->constrained();
             $table->rememberToken();

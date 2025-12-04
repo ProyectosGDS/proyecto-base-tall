@@ -82,7 +82,7 @@
                         <x-input label="Address" icon="fas.location-dot" maxlength="255" wire:model="information.address"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-input label="Profile" icon="fas.id-card-clip" wire:model="information.profile_name" disabled/>
+                        <x-input label="Role" icon="fas.id-card-clip" wire:model="user.role_name" disabled/>
                     </div>
                     <div class="col-span-6 sm:col-full">
                         <x-button

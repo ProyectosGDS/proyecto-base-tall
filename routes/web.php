@@ -8,5 +8,5 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('auth')->name('home');
 
-Route::view('/settings','settings')->middleware('auth')->name('settings');
+Route::view('/profile','profile')->middleware('auth')->name('profile');
 

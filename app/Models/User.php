@@ -26,7 +26,6 @@ class User extends Authenticatable
     protected $fillable = [
         'cui',
         'password',
-        'profile_id',
         'area_id',
         'deleted_at'
     ];
@@ -57,10 +56,6 @@ class User extends Authenticatable
         return $this->hasMany(Session::class);
     }
 
-    public function profile() : BelongsTo {
-        return $this->belongsTo(Profile::class);
-    }
-
     public function user_type() : BelongsTo {
         return $this->belongsTo(UserType::class);
     }
@@ -73,48 +68,58 @@ class User extends Authenticatable
         return $this->hasOne(UserInformation::class);
     }
 
-    public function getProfileNameAttribute() {
-        return $this->profile->name ?? null;
-    }
-
-    public function getPermissionsAttribute() {
-
-        $permissions = [];
-
-        if ($this->profile && $this->profile->role) {
-            foreach ($this->profile->role->permissions as $permission) {
-                $permissions[] = $permission->name;
-            }
-        }
-
-        return $permissions;
+    public function getRoleNameAttribute() {
+        return $this->roles->pluck('name')->first();
     }
 
     public function getMenuAttribute() {
-        if ($this->profile->menu && $this->profile->menu->pages) {
-            $pages = $this->profile->menu->pages->load('parent');
-            $pagesGroup = $pages->groupBy('page_id');
-            
-            $menu = collect();
-            $childrens = collect();
+        $allowedPermissions = $this->getAllPermissions()
+            ->where('module','menu')
+            ->pluck('name')
+            ->toArray();
 
-            foreach ($pagesGroup as $group) {
-                foreach ($group as $children) {
-                    if ($children->parent) {
-                        $menu->push($children->parent);
-                    } else {
-                        $menu->push($children);
-                    }
-                    unset($children->parent, $children->pivot);
-                    $childrens->push($children);
-                }
-            }
-            $menu = $menu->unique('id');
-            $menu->each(function ($parent) use ($childrens) {
-                $parent->childrens = $childrens->where('page_id', $parent->id)->sortBy('order')->values();
-            });
+        if (empty($allowedPermissions)) {
+            return [];
         }
-        return $menu->sortBy('order')->values()->all();
+
+        $pages = Page::with(['parent', 'children'])
+            ->where('state',true)
+            ->orderBy('order')
+            ->get();
+
+        $allowedPages = $pages->filter(function ($page) use ($allowedPermissions) {
+            return in_array($page->permission_name, $allowedPermissions);
+        });
+
+        // Preparar menú final
+        $menu = collect();
+
+         foreach ($allowedPages as $page) {
+
+            // Si es hijo y tiene padre, solo agregamos el padre
+            if ($page->parent) {
+                $menu->push($page->parent);
+            }
+
+            // Si es padre sin padre, agregarlo
+            if (!$page->parent) {
+                $menu->push($page);
+            }
+        }
+
+        // Únicos y ordenados
+        $menu = $menu->unique('id')->sortBy('order')->values();
+
+        // Adjuntar hijos permitidos a cada padre
+        $menu->each(function ($parent) use ($allowedPages) {
+
+            $parent->childrens = $allowedPages
+                ->where('page_id', $parent->id)  // hijos del padre
+                ->sortBy('order')
+                ->values();
+        });
+
+        return $menu->values()->all();
     }
 
     public function getSmallNameAttribute() {

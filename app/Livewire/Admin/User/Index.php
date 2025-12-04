@@ -34,12 +34,12 @@ class Index extends Component
             [ 'index' => 'information.gender', 'label' => 'gender' ],
             [ 'index' => 'information.birthday', 'label' => 'birthday' ],
             [ 'index' => 'information.email', 'label' => 'email' ],
-            [ 'index' => 'profile.name', 'label' => 'profile' ],
             [ 'index' => 'area.name', 'label' => 'area' ],
+            [ 'index' => 'role_name', 'label' => 'role' ],
             [ 'index' => 'deleted_at', 'label' => 'active' ]
         ];
 
-        $rows = User::with(['information', 'profile', 'area'])
+        $rows = User::with(['information','area'])
             ->when($this->search, function($query) {
                 $query->where('cui', 'like', '%' . $this->search . '%')
                     ->orWhereHas('information', function($q) {
