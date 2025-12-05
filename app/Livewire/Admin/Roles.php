@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Permission;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Spatie\Permission\Models\Role;
@@ -14,6 +15,7 @@ class Roles extends Component
     use Interactions;
 
     public ?string $search = null;
+    public ?string $search_permissions = null;
     public ?int $quantity = 5;
     public array $sort = [
         'column' => 'id',
@@ -26,11 +28,9 @@ class Roles extends Component
     ];
 
     public array $role = [
-        'id' => null,
         'name' => null,
-        'permissions' => [],
+        'permissions' => []
     ];
-    public array $permissions = [];
 
     public function render() {
          $headers = [
@@ -50,7 +50,72 @@ class Roles extends Component
             ->withQueryString();
 
         $type = 'data';
+        
+        $all_permissions = Permission::where('name','like','%'.$this->search_permissions.'%')->get()->groupBy('module');
 
-        return view('livewire.admin.roles', compact('headers', 'rows', 'type'));
+        return view('livewire.admin.roles', compact('headers', 'rows', 'type','all_permissions'));
+    }
+
+        public function save() {
+
+        $this->validate([
+            'role.name' => 'required|string|max:255',
+        ]);
+
+        $role = Role::create([
+            'name' => $this->role['name'],
+        ]);
+
+        if(!empty($this->role['permissions'])) {
+            $role->permissions()->sync($this->role['permissions'] ?? []);
+        }
+
+        $this->toast()->success('Success','Role created successfully.')->send();
+
+        $this->resetData();
+
+    }
+
+    public function edit($id) {
+        $role = Role::find($id);
+        $this->role = $role->toArray();
+        $this->role['permissions'] = $role->permissions->pluck('id')->toArray();
+        $this->modal['edit'] = true;
+    }
+
+    public function update() {
+
+        $this->validate([
+            'role.name' => 'required|string|max:255',
+        ]);
+
+        $role = role::find($this->role['id']);
+
+        $role->name = $this->role['name'];
+        $role->save();
+
+        $role->permissions()->sync($this->role['permissions'] ?? []);
+
+        $this->toast()->success('Success','Role updated successfully.')->send();
+
+        $this->resetData();
+
+    }
+
+    public function delete($id) {
+        $this->role = role::find($id)->toArray();
+        $this->modal['delete'] = true;
+    }
+
+    public function destroy () {
+        $role = role::find($this->role['id']);
+        $role->delete();
+
+        $this->toast()->success('Success','Role deleted successfully.')->send();
+        $this->resetData();
+    }
+
+    public function resetData() {
+        $this->reset(['modal','role']);
     }
 }

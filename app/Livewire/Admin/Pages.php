@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin;
 
 use App\Models\Page;
+use App\Models\Permission;
 use Livewire\Component;
 use Livewire\WithPagination;
 use TallStackUi\Traits\Interactions;
@@ -22,6 +23,7 @@ class Pages extends Component
         'order' => null,
         'page_id' => null,
         'type' => null,
+        'permission_name' => null,
     ];
     public array $sort = [
         'column' => 'id',
@@ -39,6 +41,7 @@ class Pages extends Component
             [ 'index' => 'label', 'label' => 'label' ],
             [ 'index' => 'route', 'label' => 'route' ],
             [ 'index' => 'icon', 'label' => 'icon' ],
+            [ 'index' => 'preview', 'label' => 'preview', 'sortable' => false ],
             [ 'index' => 'order', 'label' => 'order' ],
             [ 'index' => 'state', 'label' => 'state' ],
             [ 'index' => 'type', 'label' => 'type' ],
@@ -61,7 +64,9 @@ class Pages extends Component
 
         $parents = Page::where('type','parent')->get(['id','label'])->toArray();
 
-        return view('livewire.admin.pages', compact('headers','rows', 'type', 'parents'));
+        $permissions_pages = Permission::where('module','menu')->get(['name'])->toArray();
+
+        return view('livewire.admin.pages', compact('headers','rows', 'type', 'parents', 'permissions_pages'));
     }
 
     public function save() {
@@ -73,6 +78,7 @@ class Pages extends Component
             'page.order' => 'nullable|int',
             'page.type' => 'required|string|in:header,parent,page',
             'page.page_id' => 'required_if:type,page|nullable|int|exists:pages,id',
+            'page.permission_name' => 'required|string|exists:permissions,name',
         ]);
 
         Page::create([
@@ -82,6 +88,7 @@ class Pages extends Component
             'order' => $this->page['order'] ?? null,
             'type' => $this->page['type'],
             'page_id' => $this->page['page_id'] ?? null,
+            'permission_name' => $this->page['permission_name'],
         ]);
 
         $this->toast()->success('Success','Page created successfully.')->send();
@@ -104,7 +111,7 @@ class Pages extends Component
             'page.order' => 'nullable|int',
             'page.type' => 'required|string|in:header,parent,page',
             'page.page_id' => 'required_if:type,page|nullable|int|exists:pages,id',
-            'page.permission_name' => 'nullable|string|max:255',
+            'page.permission_name' => 'required|string|exists:permissions,name',
         ]);
 
         $page = Page::find($this->page['id']);
@@ -115,7 +122,7 @@ class Pages extends Component
         $page->order = $this->page['order'] ?? null;
         $page->type = $this->page['type'];
         $page->page_id = $this->page['page_id'] ?? null;
-        $page->permission_name = $this->page['permission_name'] ?? null;
+        $page->permission_name = $this->page['permission_name'];
 
         $page->save();
 

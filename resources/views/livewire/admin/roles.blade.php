@@ -15,11 +15,38 @@
         @endinteract
     </x-table>
 
-    <x-modal wire="modal.new" title="New page">
+    <x-modal wire="modal.new" title="New role">
         <form wire:submit.prevent="save">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="p-4">
                 <x-input wire:model="role.name" label='Name *' icon="fas.edit" required/>
-               
+                <div class="flex justify-between my-4 items-center">
+                    <h3 class="font-semibold mb-2">Todos los permisos</h3>
+                    <x-input 
+                        wire:model.live="search_permissions"
+                        label="Buscar permisos"
+                        icon="fas.search"
+                    />
+                </div>
+                <div class="grid gap-4">
+                    @foreach ($all_permissions as $module => $permissions)
+                    <details :open="{{ $loop->first ? true : false }}" class="border border-gray-300 p-4 rounded-lg">
+                        <summary class="cursor-pointer mb-2 font-semibold flex items-center gap-2">
+                            Permisos de {{ $module }}
+                        </summary>
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 rounded p-4 gap-4">
+                            @foreach($permissions as $permission)
+                                <x-checkbox
+                                    wire:model="role.permissions"
+                                    :value="$permission->id"
+                                    :label="$permission->name"
+                                    id="{{ $permission->name }}"
+                                    class="text-xs"
+                                />
+                            @endforeach
+                        </div>
+                    </details>
+                    @endforeach
+                </div>
             </div>
             <div class="flex justify-around items-center mt-4">
                 <x-button wire:click="resetData" icon="fas.xmark" text="Cancel" color="blue" round loading="resetData" />
@@ -28,10 +55,38 @@
         </form>
     </x-modal>
 
-    <x-modal wire="modal.edit" title="Edit page">
+    <x-modal wire="modal.edit" title="Edit role">
         <form wire:submit.prevent="update">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="p-4">
                 <x-input wire:model="role.name" label='Name *' icon="fas.edit" required/>
+                <div class="flex justify-between my-4 items-center">
+                    <h3 class="font-semibold mb-2">Todos los permisos</h3>
+                    <x-input 
+                        wire:model.live="search_permissions"
+                        label="Buscar permisos"
+                        icon="fas.search"
+                    />
+                </div>
+                <div class="grid gap-4">
+                    @foreach ($all_permissions as $module => $permissions)
+                    <details :open="{{ $loop->first ? true : false }}" class="border border-gray-300 p-4 rounded-lg">
+                        <summary class="cursor-pointer mb-2 font-semibold flex items-center gap-2">
+                            Permisos de {{ $module }}
+                        </summary>
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 rounded p-4 gap-4">
+                            @foreach($permissions as $permission)
+                                <x-checkbox
+                                    wire:model.live="role.permissions"
+                                    :value="$permission->id"
+                                    :label="$permission->name"
+                                    id="{{ $permission->name }}"
+                                    class="text-xs"
+                                />
+                            @endforeach
+                        </div>
+                    </details>
+                    @endforeach
+                </div>
             </div>
             <div class="flex justify-around items-center mt-4">
                 <x-button wire:click="resetData" icon="fas.xmark" text="Cancel" color="blue" round loading="resetData" />
@@ -40,12 +95,12 @@
         </form>
     </x-modal>
 
-    <x-modal wire="modal.delete" title="Delete page">
+    <x-modal wire="modal.delete" title="Delete role">
         <form wire:submit.prevent="destroy">
             <div class="flex items-center gap-4">
                 <x-icon name="fas.exclamation-triangle" class="size-14 text-orange-500"  />
                 <p class="text-xl font-semibold">
-                    ¿ Esta seguro de quiere eliminar la pagina {{ $page['label'] ?? null }} ?
+                    ¿ Esta seguro de quiere eliminar el role {{ $role['name'] ?? null }} ?
                 </p>
             </div>
             <div class="flex justify-end gap-4 items-center">

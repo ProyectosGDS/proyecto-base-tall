@@ -10,11 +10,10 @@ class Area extends Model
 
     protected $fillable = [
         'name',
-        'dependency_id',
-        'active',
+        'area_id',
     ];
 
     public function dependency(){
-        return $this->belongsTo(Dependency::class);
+        return $this->belongsTo(Area::class, 'area_id');
     }
 }

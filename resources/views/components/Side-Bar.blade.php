@@ -35,7 +35,7 @@
                                         <ul id="dropdown-example" class="hidden py-2 space-y-2">
                                             @foreach ($page['childrens'] as $children)
                                                 <li>
-                                                    <a href="{{ route($children['route']) }}" class="flex cursor-pointer items-center w-full p-2 transition duration-75 rounded-lg pl-5 group hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs($children['route']) ? 'bg-gray-100 dark:bg-gray-700' : '' }}" >
+                                                    <a href="{{ $children['route'] ? route($children['route']) : '#' }}" class="flex cursor-pointer items-center w-full p-2 transition duration-75 rounded-lg pl-5 group hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs($children['route']) ? 'bg-gray-100 dark:bg-gray-700' : '' }}" >
                                                     <x-icon :name="$children['icon']" class="size-5" />
                                                     <span class="ms-3">{{ $children['label'] }}</span>
                                                 </a>
@@ -45,7 +45,7 @@
                                     </li>
                                 @else	
                                     <li>
-                                        <a href="{{ route($page['route']) }}" class="flex cursor-pointer pages-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group" >
+                                        <a href="{{ $page['route'] ? route($page['route']) : '#' }}" class="flex cursor-pointer pages-center p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group" >
                                             <x-icon :name="$page['icon']" class="size-5" />
                                             <span class="ms-3">{{ $page['label'] }}</span>
                                         </a>

@@ -16,10 +16,15 @@
         @endinteract
     </x-table>
 
-    <x-modal title="New permission" wire="modal.new" icon="fas.lock" scrollable>
+    <x-modal title="New área" wire="modal.new" icon="fas.lock" scrollable>
         <form wire:submit.prevent="save" class="grid gap-4">
-            <x-input icon="fas.edit" label="Name *" wire:model="permission.name" required/>
-            <x-input icon="fas.folder-tree" label="Module *" wire:model="permission.module" required/>
+            <x-input icon="fas.edit" label="Name *" wire:model="area.name" required/>
+            <x-select.styled 
+                wire:model="area.area_id" 
+                label="Dependency"
+                :options="$dependencies"
+                select="label:name|value:id"
+            />
             <div class="flex justify-end gap-4 items-center">
                 <x-button  color="blue" wire:click="resetData" text="Cancel" icon="fas.xmark" round loading="resetData" />
                 <x-button type="submit" color="dark" text="Save" icon="fas.save" round loading="save"/>
@@ -28,10 +33,15 @@
         
     </x-modal>
 
-    <x-modal title="Edit permission" wire="modal.edit" icon="fas.lock" scrollable>
+    <x-modal title="Edit área" wire="modal.edit" icon="fas.lock" scrollable>
         <form wire:submit.prevent="update" class="grid gap-4">
-            <x-input icon="fas.edit" label="Name *" wire:model.defer="permission.name" required/>
-            <x-input icon="fas.folder-tree" label="Module *" wire:model.defer="permission.module" required/>
+            <x-input icon="fas.edit" label="Name *" wire:model.defer="area.name" required/>
+            <x-select.styled 
+                wire:model="area.area_id" 
+                label="Dependency"
+                :options="$dependencies"
+                select="label:name|value:id"
+            />
             <div class="flex justify-end gap-4 items-center">
                 <x-button  color="blue" wire:click="resetData()" text="Cancel" icon="fas.xmark" round loading="resetData" />
                 <x-button type="submit" color="dark" text="Update" icon="fas.arrows-rotate" round loading="update"/>
@@ -39,13 +49,13 @@
         </form>
     </x-modal>
 
-    <x-modal title="Delete permission" wire="modal.delete" icon="fas.lock" scrollable>
+    <x-modal title="Delete área" wire="modal.delete" icon="fas.lock" scrollable>
         <form wire:submit.prevent="destroy" class="grid gap-4">
             <div class="flex gap-4">
                 <x-icon name="fas.exclamation-triangle" class="size-14 text-orange-500"/>
                 <p class="text-lg self-center">
-                    Are you sure you want to delete the permission 
-                    <strong>{{ $permission['name'] ?? '' }}</strong>? 
+                    Are you sure you want to delete the area 
+                    <strong>{{ $area['name'] ?? '' }}</strong>? 
                     This action cannot be undone.
                 </p>
             </div>

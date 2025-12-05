@@ -7,6 +7,10 @@
         />
     </div>
     <x-table :$headers :$rows filter paginate loading :quantity="[5,10,20,50,100]" :$sort>
+        @interact('column_preview',$row)
+            <x-icon :name="$row->icon" class="size-6" />
+        @endinteract
+
         @interact('column_action',$row)
             <x-dropdown icon="ellipsis-vertical" static>
                 <x-dropdown.items icon="fas.pencil" text="Edit" wire:click="edit('{{ $row->id }}')" />
@@ -22,17 +26,26 @@
                 <x-input wire:model="page.icon" label='Icon' icon="fas.edit" />
                 <x-input wire:model="page.route" label='Route' icon="fas.edit" />
                 <x-input wire:model="page.order" label='Order' icon="fas.edit" />
-                <x-select.native wire:model="page.type" 
+                <x-select.native 
+                    wire:model="page.type" 
                     label="Type *" 
                     :options="['','header','parent','page']"
                     required
                 />
-                <x-select.styled wire:model="page.page_id" 
+                <x-select.styled 
+                    wire:model="page.page_id" 
                     label="Parent"
                     :options="$parents"
                     select="label:label|value:id"
                 />
-                <x-input wire:model="page.permission_name" label='Permission' icon="fas.lock" />
+                <x-select.styled 
+                    wire:model="page.permission_name" 
+                    label="Permissions *"
+                    :options="$permissions_pages"
+                    select="label:name|value:name"
+                    required
+                />
+
             </div>
             <div class="flex justify-around items-center mt-4">
                 <x-button wire:click="resetData" icon="fas.xmark" text="Cancel" color="blue" round loading="resetData" />
@@ -48,17 +61,26 @@
                 <x-input wire:model="page.icon" label='Icon' icon="fas.edit" />
                 <x-input wire:model="page.route" label='Route' icon="fas.edit" />
                 <x-input wire:model="page.order" label='Order' icon="fas.edit" />
-                <x-select.native wire:model="page.type" 
+                <x-select.native 
+                    wire:model="page.type" 
                     label="Type *" 
                     :options="['','header','parent','page']"
                     required
                 />
-                <x-select.styled wire:model="page.page_id" 
+                <x-select.styled 
+                    wire:model="page.page_id" 
                     label="Parent"
                     :options="$parents"
                     select="label:label|value:id"
                 />
-                <x-input wire:model="page.permission_name" label='Permission' icon="fas.lock" />
+                <x-select.styled 
+                    wire:model.live="page.permission_name" 
+                    label="Permissions *"
+                    :options="$permissions_pages"
+                    select="label:name|value:name"
+                    required
+                />
+
             </div>
             <div class="flex justify-around items-center mt-4">
                 <x-button wire:click="resetData" icon="fas.xmark" text="Cancel" color="blue" round loading="resetData" />
