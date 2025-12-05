@@ -25,6 +25,7 @@
                         wire:model.live="search_permissions"
                         label="Buscar permisos"
                         icon="fas.search"
+                        type="search"
                     />
                 </div>
                 <div class="grid gap-4">
@@ -39,8 +40,8 @@
                                     wire:model="role.permissions"
                                     :value="$permission->id"
                                     :label="$permission->name"
-                                    id="{{ $permission->name }}"
                                     class="text-xs"
+                                    id="new-permission-{{ $permission->id }}"
                                 />
                             @endforeach
                         </div>
@@ -65,6 +66,7 @@
                         wire:model.live="search_permissions"
                         label="Buscar permisos"
                         icon="fas.search"
+                        type="search"
                     />
                 </div>
                 <div class="grid gap-4">
@@ -79,8 +81,8 @@
                                     wire:model.live="role.permissions"
                                     :value="$permission->id"
                                     :label="$permission->name"
-                                    id="{{ $permission->name }}"
                                     class="text-xs"
+                                    id="new-permission-{{ $permission->id }}"
                                 />
                             @endforeach
                         </div>

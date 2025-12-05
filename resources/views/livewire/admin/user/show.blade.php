@@ -41,6 +41,20 @@
                 </ul>
             </div>
         </div>
+        <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+            <div class="flow-root">
+                <h3 class="text-xl font-semibold ">Disabled user</h3>
+                <div class="col-span-6 sm:col-full">
+                    <x-button
+                        wire:click="modal.disabled = true"
+                        text="Yes, disabled" 
+                        icon="fas.user-xmark"
+                        round
+                        color="red"
+                    />
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-span-2">
         <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
@@ -87,19 +101,23 @@
                         <x-input label="Address *" icon="fas.location-dot" maxlength="255" wire:model="information.address" :value="old('information.address')"/>
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-select.native wire:model="user_to_update.role_id" 
+                        <x-select.styled 
+                            wire:model="user_to_update.role_id" 
+                            label="Role" 
                             :options="$roles"
                             select="label:name|value:id"
-                            label="Role" 
                             icon="fas.id-card-clip"
+                            searchable 
                         />
                     </div>
                     <div class="col-span-6 sm:col-span-3">
-                        <x-select.native wire:model="user_to_update.area_id" 
+                        <x-select.styled 
+                            wire:model="user_to_update.area_id" 
+                            label="Areas" 
                             :options="$areas"
                             select="label:name|value:id"
-                            label="Areas" 
                             icon="fas.building"
+                            searchable 
                         />
                     </div>
                     
@@ -119,13 +137,44 @@
         <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
             <h3 class="mb-4 text-xl font-semibold ">Reset Password ?</h3>
             <x-button
-                wire:click="resetPassword"
+                wire:click="modal.resetPassword = true"
                 text="Yes, reset password" 
                 color="red"
                 round 
-                icon="fas.exclamation-triangle"
-                loading="resetPassword"
+                icon="fas.key"
             />
         </div>
     </div>
+
+    <x-modal title="Reiniciar contraseña" wire="modal.resetPassword" icon="fas.user-xmark">
+        <div class="grid gap-4">
+            <div class="flex gap-4">
+                <x-icon name="fas.exclamation-triangle" class="size-14 text-orange-500"/>
+                <p class="text-lg self-center">
+                    Esta seguro de reinciar la contraseña del usuario 
+                    <strong>{{ $user->information['fullname'] ?? '' }}</strong>? 
+                </p>
+            </div>
+            <div class="flex justify-end items-center gap-4">
+                <x-button  color="dark" wire:click="resetData" text="Cancel" icon="fas.xmark" round loading="resetData" />
+                <x-button  color="red" wire:click="resetPassword" text="Yes, reset" icon="fas.check" round loading="resetPassword"/>
+            </div>
+        </div>
+    </x-modal>
+
+    <x-modal title="Deshabilitar usuario" wire="modal.disabled" icon="fas.user-xmark">
+        <div class="grid gap-4">
+            <div class="flex gap-4">
+                <x-icon name="fas.exclamation-triangle" class="size-14 text-orange-500"/>
+                <p class="text-lg self-center">
+                    Esta seguro de desabilitar al usuario 
+                    <strong>{{ $user->information['fullname'] ?? '' }}</strong>? 
+                </p>
+            </div>
+            <div class="flex justify-end items-center gap-4">
+                <x-button  color="dark" wire:click="resetData" text="Cancel" icon="fas.xmark" round loading="resetData" />
+                <x-button  color="red" wire:click="disableUser" text="Yes, disabled" icon="fas.check" round loading="disableUser"/>
+            </div>
+        </div>
+    </x-modal>
 </div>

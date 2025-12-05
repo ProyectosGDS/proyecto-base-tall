@@ -14,8 +14,14 @@ class Show extends Component
     use Interactions;
 
     public User $user;
-    public array $user_to_update = [];
+    public array $user_to_update = [
+        'role_id' => null,
+    ];
     public array $information = [];
+    public array $modal = [
+        'disabled' => false,
+        'resetPassword' => false,
+    ];
 
     public function mount ($id) {
         $this->user = User::with(['sessions','information'])
@@ -23,11 +29,12 @@ class Show extends Component
             ->first();
 
         $this->user_to_update = $this->user->toArray();
+        $this->user_to_update['role_id'] = $this->user->roles->first()?->id;
         $this->information = $this->user->information->toArray();
     }
 
     public function render() {
-        $roles = Role::all();
+        $roles = Role::get(['id','name'])->toArray();
         $areas = Area::where('active',1)->get();
         return view('livewire.admin.user.show',compact('roles','areas'));
     }
@@ -43,7 +50,6 @@ class Show extends Component
             'information.address' => 'required|string|max:255',
             'information.email' => 'required|email',
             'information.gender' => 'required|in:F,M',
-            'user.profile_id' => 'nullable|exists:profiles,id',
         ]);
 
         $this->user->information->first_name = $this->information['first_name'];
@@ -58,7 +64,7 @@ class Show extends Component
 
         $this->user->information->save();
 
-        $this->user->profile_id = $this->user_to_update['profile_id'];
+        $this->user->roles()->sync($this->user_to_update['role_id']);
         $this->user->area_id = $this->user_to_update['area_id'];
         $this->user->save();
 
@@ -81,8 +87,7 @@ class Show extends Component
         $this->toast()->success('Success','User disabled successfully.')->send();
     }
 
-
     public function resetData () {
-        $this->reset('passwords');
+        $this->reset('modal');
     }
 }

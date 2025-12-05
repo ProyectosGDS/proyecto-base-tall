@@ -276,7 +276,7 @@ class DatabaseSeeder extends Seeder
             'user_type_id' => 1,
         ]);
 
-        $user->assignRole('Sysadmin');
+        $user-> ('Sysadmin');
 
         UserInformation::create([
             'first_name' => 'Nelson',

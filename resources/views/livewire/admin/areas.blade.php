@@ -24,6 +24,7 @@
                 label="Dependency"
                 :options="$dependencies"
                 select="label:name|value:id"
+                searchable 
             />
             <div class="flex justify-end gap-4 items-center">
                 <x-button  color="blue" wire:click="resetData" text="Cancel" icon="fas.xmark" round loading="resetData" />
@@ -41,6 +42,7 @@
                 label="Dependency"
                 :options="$dependencies"
                 select="label:name|value:id"
+                searchable 
             />
             <div class="flex justify-end gap-4 items-center">
                 <x-button  color="blue" wire:click="resetData()" text="Cancel" icon="fas.xmark" round loading="resetData" />

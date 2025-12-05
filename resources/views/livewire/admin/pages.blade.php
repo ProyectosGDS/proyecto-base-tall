@@ -37,12 +37,14 @@
                     label="Parent"
                     :options="$parents"
                     select="label:label|value:id"
+                    searchable
                 />
                 <x-select.styled 
                     wire:model="page.permission_name" 
                     label="Permissions *"
                     :options="$permissions_pages"
                     select="label:name|value:name"
+                    searchable
                     required
                 />
 
@@ -72,12 +74,14 @@
                     label="Parent"
                     :options="$parents"
                     select="label:label|value:id"
+                    searchable
                 />
                 <x-select.styled 
                     wire:model.live="page.permission_name" 
                     label="Permissions *"
                     :options="$permissions_pages"
                     select="label:name|value:name"
+                    searchable
                     required
                 />
 
